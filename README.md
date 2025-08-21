@@ -1,1 +1,7 @@
-# messenger-backend
+# Мессенджер
+Этот репозиторий храанит бэкенд мессенджера.
+## Tech stack:
+|Столбец 1|Столбец 2|Столбец 3|
+|-|-|-|
+|Node.js|TypeScript|Nest.js|
+|dotenv|||
