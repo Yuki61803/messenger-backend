@@ -20,7 +20,7 @@ import { UserModule } from '../user/user.module';
     }),
     UserModule
   ],
-  providers: [AuthService],
+  providers: [AuthService, ConfigService],
   controllers: [AuthController],
   exports: [AuthService],
 })
