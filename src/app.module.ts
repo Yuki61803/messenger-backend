@@ -6,6 +6,7 @@ import { ConversationModule } from './modules/conversation/conversation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import { Conversation } from './modules/conversation/conversation.entity';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { AuthModule } from './modules/auth/auth.module';
       username: 'postgres',
       password: '123',
       database: 'messenger',
-      entities: [User]
+      entities: [User, Conversation]
     }),
     AuthModule
   ],

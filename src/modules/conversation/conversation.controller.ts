@@ -1,15 +1,17 @@
-import { Controller, Get, Post, Body, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Request, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { ConversationService } from './conversation.service';
 import { StartConversationDto } from './dto/start-conversation';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('/api/v1')
 export class ConversationController {
   constructor(private readonly conversationService: ConversationService) {}
 
   @Post('/conversation')
+  @UseGuards(AuthGuard)
   @UsePipes(new ValidationPipe({ transform: true }))
-  startConversation(@Body() startConversationDto: StartConversationDto): string {
+  startConversation(@Request() request, @Body() startConversationDto: StartConversationDto) {
     console.log(startConversationDto)
-    return this.conversationService.startConversation();
+    return this.conversationService.startConversation(request.user.id, startConversationDto);
   }
 }
