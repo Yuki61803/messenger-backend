@@ -29,4 +29,12 @@ export class ConversationService {
 
     return 'Hello World!';
   }
+
+  async getConversations(initiator_id: string) {
+    let conversations = await this.conversationsRepository.findBy({ 
+      participants: ArrayContains([initiator_id])
+    });
+
+    return conversations;
+  }
 }

@@ -14,4 +14,10 @@ export class ConversationController {
     console.log(startConversationDto)
     return this.conversationService.startConversation(request.user.id, startConversationDto);
   }
+
+  @Get('/conversation')
+  @UseGuards(AuthGuard)
+  getConversations(@Request() request) {
+    return this.conversationService.getConversations(request.user.id);
+  }
 }
