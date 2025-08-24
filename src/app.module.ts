@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ContactModule } from './modules/contact/contact.module';
+import { ConversationModule } from './modules/conversation/conversation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
@@ -10,7 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot(), 
-    ContactModule,
+    ConversationModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
