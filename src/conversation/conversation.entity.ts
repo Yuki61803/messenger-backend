@@ -1,5 +1,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { FileMessage } from './dto/file-message.dto';
+import { TextMessage } from './dto/text-message.dto';
 
 @Entity('conversations')
 export class Conversation {
@@ -18,10 +20,7 @@ export class Conversation {
   @Column({
     type: 'jsonb'
   })
-  messages: {
-    text: string,
-    timestamp: number,
-  }[];
+  messages: TextMessage[] | FileMessage[];
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
   public created_at: Date;
