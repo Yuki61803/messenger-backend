@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ConversationModule } from './modules/conversation/conversation.module';
+import { ConversationModule } from './conversation/conversation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './modules/user/user.entity';
-import { AuthModule } from './modules/auth/auth.module';
-import { Conversation } from './modules/conversation/conversation.entity';
+import { User } from './user/user.entity';
+import { AuthModule } from './auth/auth.module';
+import { Conversation } from './conversation/conversation.entity';
+import { ChatGateway } from './chat/chat.gateway';
 
 @Module({
   imports: [
@@ -24,6 +25,6 @@ import { Conversation } from './modules/conversation/conversation.entity';
     AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ChatGateway],
 })
 export class AppModule {}
