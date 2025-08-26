@@ -3,4 +3,6 @@ export interface FileMessage {
     text: string,
     file_url: string,
     type: 'file',
+    readed_by: string[]
+    status: 'default' | 'changed'
 }
