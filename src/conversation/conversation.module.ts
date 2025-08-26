@@ -13,5 +13,6 @@ import { User } from '../user/user.entity';
   ],
   controllers: [ConversationController],
   providers: [ConversationService],
+  exports: [ConversationService]
 })
 export class ConversationModule {}

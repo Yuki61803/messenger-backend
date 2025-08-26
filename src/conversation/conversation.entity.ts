@@ -15,8 +15,13 @@ export class Conversation {
   })
   participants: string[];
 
-  @Column()
-  messages: string;
+  @Column({
+    type: 'jsonb'
+  })
+  messages: {
+    text: string,
+    timestamp: number,
+  }[];
 
   @CreateDateColumn({ type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)" })
   public created_at: Date;

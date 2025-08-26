@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { StartConversationDto } from './dto/start-conversation';
 import { Conversation } from './conversation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,7 +23,7 @@ export class ConversationService {
       this.conversationsRepository.insert({
         name: '',
         participants: [startConversationDto.user_id, initiator_id],
-        messages: JSON.stringify({})
+        messages: []
       });
     }
 
@@ -36,5 +36,32 @@ export class ConversationService {
     });
 
     return conversations;
+  }
+
+  async sendMessage(author_id: string | number, message: {conversation_id: string, text: string}) {
+    let conversation = await this.conversationsRepository.findOneBy({ 
+      id: message.conversation_id as any // скорее всего, будет uuid, а не number
+    });
+
+    if (!conversation) {
+      throw new NotFoundException('Conversation not found');
+    }
+
+    // Создаем новое сообщение
+    const newMessage = {
+      author_id: author_id,
+      text: message.text,
+      timestamp: (Date.now() / 1000).toFixed(0),
+    };
+
+    // TODO
+    let messages: any = [];
+    if (conversation.messages?.length > 0) messages = conversation.messages;
+
+    conversation.messages = [...messages, newMessage];
+
+    await this.conversationsRepository.save(conversation);
+
+    return conversation;
   }
 }

@@ -8,6 +8,7 @@ import { User } from './user/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { Conversation } from './conversation/conversation.entity';
 import { ChatGateway } from './chat/chat.gateway';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { ChatGateway } from './chat/chat.gateway';
       database: 'messenger',
       entities: [User, Conversation]
     }),
-    AuthModule
+    AuthModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
