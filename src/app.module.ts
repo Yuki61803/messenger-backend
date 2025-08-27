@@ -14,6 +14,7 @@ import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { Contact } from './contact/contact.entity';
+import { ContactModule } from './contact/contact.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { Contact } from './contact/contact.entity';
     }),
     AuthModule,
     UserModule,
+    ContactModule,
     MulterModule.register({
       dest: './files',
     }),
