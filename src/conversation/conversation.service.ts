@@ -38,7 +38,8 @@ export class ConversationService {
     return conversations;
   }
 
-  async sendMessage(author_id: string | number, message: {conversation_id: string, text: string}) {
+  //TODO
+  async sendMessage(author_id: string | number, message: {conversation_id: string, text: string} | any) {
     let conversation = await this.conversationsRepository.findOneBy({ 
       id: message.conversation_id as any // скорее всего, будет uuid, а не number
     });
