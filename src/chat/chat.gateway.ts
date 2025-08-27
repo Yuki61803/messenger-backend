@@ -26,12 +26,24 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   @UseGuards(WsGuard)
-  @SubscribeMessage('message')
-  handleMessage(client: Socket, payload: { conversation_id: string; text: string }) {
-    this.conversationService.sendMessage(client.data.user.id, {
-      conversation_id: payload.conversation_id,
-      text: payload.text
-    })
+  @SubscribeMessage('message') // TODO
+  handleMessage(client: Socket, payload: any) {
+    if (payload.type == 'text') {
+      this.conversationService.sendMessage(client.data.user.id, {
+        conversation_id: payload.conversation_id,
+        text: payload.text,
+        type: 'text'
+      })
+    }
+    if (payload.type == 'file') {
+      this.conversationService.sendMessage(client.data.user.id, {
+        conversation_id: payload.conversation_id,
+        file_urls: payload.file_urls,
+        text: payload.text,
+        type: 'file'
+      })
+    }
+    
 
     client.emit("message", "success");
     return 'success';

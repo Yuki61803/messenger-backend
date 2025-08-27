@@ -4,6 +4,8 @@ import { Conversation } from './conversation.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, ArrayContains } from 'typeorm';
 import { User } from '../user/user.entity';
+import { FileMessage } from './dto/file-message.dto';
+import { TextMessage } from './dto/text-message.dto';
 
 @Injectable()
 export class ConversationService {
@@ -39,7 +41,7 @@ export class ConversationService {
   }
 
   //TODO
-  async sendMessage(author_id: string | number, message: {conversation_id: string, text: string} | any) {
+  async sendMessage(author_id: string | number, message: {conversation_id: string, text: string, type: string, file_urls?: string[]} | any) {
     let conversation = await this.conversationsRepository.findOneBy({ 
       id: message.conversation_id as any // скорее всего, будет uuid, а не number
     });
@@ -49,20 +51,50 @@ export class ConversationService {
     }
 
     // Создаем новое сообщение
-    const newMessage = {
-      author_id: author_id,
-      text: message.text,
-      timestamp: (Date.now() / 1000).toFixed(0),
-    };
+    if (message.type == 'text') {
+      const timestamp = (Date.now() / 1000).toFixed(0);
+      const newMessage: TextMessage = {
+        author_id: author_id,
+        text: message.text,
+        readed_by: [],
+        status: 'default',
+        type: 'text',
+        created_at: timestamp,
+        updated_at: timestamp
+      };
 
-    // TODO
-    let messages: any = [];
-    if (conversation.messages?.length > 0) messages = conversation.messages;
+      // TODO
+      let messages: any = [];
+      if (conversation.messages?.length > 0) messages = conversation.messages;
 
-    conversation.messages = [...messages, newMessage];
+      conversation.messages = [...messages, newMessage];
 
-    await this.conversationsRepository.save(conversation);
+      await this.conversationsRepository.save(conversation);
+    }
+    if (message.type == 'file' && message.file_urls) {
+      const timestamp = (Date.now() / 1000).toFixed(0);
+      const newMessage: FileMessage = {
+        author_id: author_id,
+        text: message.text,
+        file_urls: message.file_urls,
+        readed_by: [],
+        status: 'default',
+        type: 'file',
+        created_at: timestamp,
+        updated_at: timestamp
+      };
 
+      // TODO
+      let messages: any = [];
+      if (conversation.messages?.length > 0) messages = conversation.messages;
+
+      conversation.messages = [...messages, newMessage];
+
+      await this.conversationsRepository.save(conversation);
+    }
+    
+
+    
     return conversation;
   }
 }
