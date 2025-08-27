@@ -9,9 +9,14 @@ import { AuthModule } from './auth/auth.module';
 import { Conversation } from './conversation/conversation.entity';
 import { ChatGateway } from './chat/chat.gateway';
 import { UserModule } from './user/user.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { FileModule } from './file/file.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    FileModule,
     ConfigModule.forRoot(), 
     ConversationModule,
     TypeOrmModule.forRoot({
@@ -24,7 +29,17 @@ import { UserModule } from './user/user.module';
       entities: [User, Conversation]
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    MulterModule.register({
+      dest: './files',
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../..', 'files'),
+      serveStaticOptions: {
+        fallthrough: false
+      },
+      serveRoot: '/files'
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, ChatGateway],
