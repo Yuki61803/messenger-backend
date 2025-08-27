@@ -3,5 +3,7 @@ export interface TextMessage {
     text: string,
     type: 'text',
     readed_by: string[]
-    status: 'default' | 'changed'
+    status: 'default' | 'changed',
+    created_at: string | number, // unix timestamp
+    updated_at: string | number, // unix timestamp
 }
