@@ -13,6 +13,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { FileModule } from './file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { Contact } from './contact/contact.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { join } from 'path';
       username: 'postgres',
       password: '123',
       database: 'messenger',
-      entities: [User, Conversation]
+      entities: [User, Conversation, Contact]
     }),
     AuthModule,
     UserModule,
