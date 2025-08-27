@@ -16,4 +16,10 @@ export class ContactController {
   deleteContact(@Request() request, @Body() contactDto: {contact_id: string | number}) {
     this.contactsService.deleteContact(request.user.id, contactDto.contact_id)
   }
+
+  @Post('/favorite')
+  @UseGuards(AuthGuard)
+  favoriteContact(@Request() request, @Body() contactDto: {contact_id: string | number}) {
+    this.contactsService.favoriteContact(request.user.id, contactDto.contact_id)
+  }
 }

@@ -44,4 +44,27 @@ export class ContactService {
     
     return 'Hello World!';
   }
+  async favoriteContact(user_id, contact_id) {
+    let contact = await this.contactsRepository.findBy({ 
+          user_id: user_id,
+          contact_id: contact_id
+        });
+      
+    
+    
+    if (contact?.length === 1) {
+      let isFavorite = !contact[0].is_favorite;
+
+      this.contactsRepository.update({
+        user_id: user_id,
+        contact_id: contact_id,
+      },
+      {
+        is_favorite: isFavorite,
+      },
+      );
+    }
+    
+    return 'Hello World!';
+  }
 }
