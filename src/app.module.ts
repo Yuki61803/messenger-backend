@@ -2,19 +2,20 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { ConversationModule } from './conversation/conversation.module';
+import { ConversationModule } from './modules/conversation/conversation.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './user/user.entity';
-import { AuthModule } from './auth/auth.module';
-import { Conversation } from './conversation/conversation.entity';
-import { ChatGateway } from './chat/chat.gateway';
-import { UserModule } from './user/user.module';
+import { User } from './modules/user/user.entity';
+import { AuthModule } from './modules/auth/auth.module';
+import { Conversation } from './modules/conversation/conversation.entity';
+import { ChatGateway } from './modules/chat/chat.gateway';
+import { UserModule } from './modules/user/user.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { FileModule } from './file/file.module';
+import { FileModule } from './modules/file/file.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { Contact } from './contact/contact.entity';
-import { ContactModule } from './contact/contact.module';
+import { Contact } from './modules/contact/contact.entity';
+import { ContactModule } from './modules/contact/contact.module';
+import { WsGuard } from './modules/auth/ws.guard';
 
 @Module({
   imports: [
@@ -45,6 +46,6 @@ import { ContactModule } from './contact/contact.module';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService, ChatGateway],
+  providers: [AppService, ChatGateway, WsGuard],
 })
 export class AppModule {}
