@@ -1,4 +1,5 @@
 export interface FileMessage {
+    id: string,
     author_id: string | number,
     text: string,
     file_urls: string[],

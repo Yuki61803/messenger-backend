@@ -1,4 +1,5 @@
 export interface TextMessage {
+    id: string,
     author_id: string | number,
     text: string,
     type: 'text',

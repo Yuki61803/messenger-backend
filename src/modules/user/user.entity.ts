@@ -13,4 +13,14 @@ export class User {
 
   @Column({ default: 0 })
   is_online: boolean;
+
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  phone?: string;
+
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  b24_id?: string;
+
+  @Column({ type: 'varchar', length: 30, nullable: true })
+  b24_member_id?: string;
 }
+

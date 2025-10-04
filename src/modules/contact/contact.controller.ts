@@ -1,4 +1,4 @@
-import { Controller, Post, Delete, UseGuards, Request, Body, Get } from '@nestjs/common';
+import { Controller, Post, Delete, HttpCode, UseGuards, Query, Request, Body, Get } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { AuthGuard } from 'src/modules/auth/auth.guard';
 
@@ -8,8 +8,11 @@ export class ContactController {
 
   @Get()
   @UseGuards(AuthGuard)
-  getContacts(@Request() request) {
-    return this.contactsService.getContactIds(request.user.id)
+  getContacts(@Request() request, @Query() search: {text: string}) {
+    if (search?.text?.length > 0)
+      return this.contactsService.getContactIds(request.user.id, search.text);
+    else
+      return this.contactsService.getContactIds(request.user.id);
   }
   @Post()
   @UseGuards(AuthGuard)
@@ -23,8 +26,10 @@ export class ContactController {
   }
 
   @Post('/favorite')
+  @HttpCode(200)
   @UseGuards(AuthGuard)
   favoriteContact(@Request() request, @Body() contactDto: {contact_id: string | number}) {
-    this.contactsService.favoriteContact(request.user.id, contactDto.contact_id)
+    this.contactsService.favoriteContact(request.user.id, contactDto.contact_id);
+
   }
 }

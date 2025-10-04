@@ -1,6 +1,6 @@
-import { MigrationInterface, QueryRunner } from "typeorm";
+import { QueryRunner } from "typeorm";
 
-export class Messenger1756296789263 implements MigrationInterface {
+export class Messenger1756296789263 {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
@@ -8,7 +8,7 @@ export class Messenger1756296789263 implements MigrationInterface {
             id SERIAL PRIMARY KEY,
             user_id VARCHAR(100) NOT NULL,
             contact_id VARCHAR(100) NOT NULL,
-            is_favorite VARCHAR(5) NULL,
+            is_favorite boolean NULL,
             created_at TIMESTAMP DEFAULT NOW(),
             updated_at TIMESTAMP DEFAULT NOW()
           );`,

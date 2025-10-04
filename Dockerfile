@@ -1,6 +1,6 @@
 FROM node:lts-alpine as builder
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY package.json package-lock.json migrations ./
 RUN npm install
 COPY . ./
 RUN npm run build
@@ -8,7 +8,6 @@ RUN npm run build
 FROM node:lts-alpine AS production
 WORKDIR /app
 COPY --from=builder /app/dist ./dist
-COPY package.json package-lock.json ./
+COPY --from=builder /app/migrations ./migrations
+COPY package.json package-lock.json migrations ./
 RUN npm install --production
-EXPOSE 3000
-CMD ["npm", "run", "start:prod"]

@@ -1,6 +1,6 @@
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class Messenger1756018154625 implements MigrationInterface {
+export class Messenger1756018154625 {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(

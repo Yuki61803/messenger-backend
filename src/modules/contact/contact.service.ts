@@ -46,9 +46,9 @@ export class ContactService {
   }
   async favoriteContact(user_id, contact_id) {
     let contact = await this.contactsRepository.findBy({ 
-          user_id: user_id,
-          contact_id: contact_id
-        });
+      user_id: user_id,
+      contact_id: contact_id
+    });
       
     
     
@@ -68,9 +68,38 @@ export class ContactService {
     return 'Hello World!';
   }
   
-  async getContactIds(user_id: string) {
-    return await this.contactsRepository.findBy({
+  async getContactIds(user_id: string, search_text?: string) {
+    let contacts = await this.contactsRepository.findBy({
       user_id: user_id
-    })
+    });
+
+    let response: Array<Contact & {
+      name: string,
+      is_online: boolean
+    }> = [];
+ 
+    for (let i = 0; i < contacts.length; i++) {
+      const user = await this.usersRepository.findOneBy({
+        id: +contacts[i].contact_id
+      });
+
+      if (user) {
+        response[i] = {
+          ...contacts[i],
+          name: user.name,
+          is_online: user.is_online,
+        }
+      }
+    }
+
+    console.log(response, user_id);
+
+    if (search_text && search_text?.length > 0) {
+      response = response.filter((contact) => contact.name.toLowerCase().includes(search_text.toLowerCase()));
+    }
+
+    console.log(response);
+
+    return response;
   }
 }

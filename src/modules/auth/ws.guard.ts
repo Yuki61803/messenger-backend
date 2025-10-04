@@ -14,9 +14,7 @@ export class WsGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    let cookies = context.switchToWs().getClient().handshake.headers.cookie;
-    const token = this.parseCookie(cookies, 'access_token');
-    console.log(token)
+    let token = context.switchToWs().getClient().handshake.query?.access_token;
 
     try {
       if (token) {
