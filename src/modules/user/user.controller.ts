@@ -1,6 +1,7 @@
-import { Controller, Get, Request, Query, Post, Body, Patch } from '@nestjs/common';
+import { Controller, Get, Delete, Request, Query, Post, Body, Patch, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
+import { AuthGuard } from '../auth/auth.guard';
 
 @Controller('/api/v1')
 export class UserController {
@@ -11,6 +12,12 @@ export class UserController {
     return this.usersService.changeStatus(req.user.id, statusDto.status);
   }
 
+  @UseGuards(AuthGuard)
+  @Delete('/user/me')
+  async deleteMyProfile(@Request() req) {
+    return this.usersService.deleteOne(req.user.id);
+  }
+  @UseGuards(AuthGuard)
   @Patch('/user/me')
   async changeMyProfile(@Request() req, @Body() user_data: User) {
     return this.usersService.updateOne(req.user.id, user_data);
@@ -51,5 +58,11 @@ export class UserController {
     }
     
     return this.usersService.findManyById(ids);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/user/profile')
+  getProfile(@Request() req) {
+    return this.usersService.findOneById(req.user.id);
   }
 }

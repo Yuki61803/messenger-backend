@@ -32,4 +32,12 @@ export class ContactController {
     this.contactsService.favoriteContact(request.user.id, contactDto.contact_id);
 
   }
+
+  @Post('/block')
+  @HttpCode(200)
+  @UseGuards(AuthGuard)
+  blockContact(@Request() request, @Body() contactDto: {contact_id: string | number}) {
+    this.contactsService.blockContact(request.user.id, contactDto.contact_id);
+
+  }
 }

@@ -23,8 +23,10 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
-  async authViaB24(b24Token: string, memberId: string): Promise<{ access_token: string | null }> {
-    const res = await fetch('https://mcm-dev.bitrix24.ru/rest/user.current', {
+  async authViaB24(b24Token: string, memberId: string, domain: string): Promise<{ access_token: string | null }> {
+    let subdomain = domain.split('https://')[1].split('.bitrix24')[0];
+
+    const res = await fetch(`https://${subdomain}.bitrix24.ru/rest/user.current`, {
       method: 'GET',
       headers: {
         'Authorization': 'Bearer ' + b24Token
@@ -35,12 +37,27 @@ export class AuthService {
       let user = await this.userService.findOneById(data.result.ID);
 
       if (!user) {
+        // todo
+        const avatarRes: any = await fetch(`https://${subdomain}.bitrix24.ru/rest/im.user.get`, {
+          method: 'POST',
+          headers: {
+            'Authorization': 'Bearer ' + b24Token
+          },
+          body: JSON.stringify({
+            "ID": data?.result?.ID
+          })
+        })
+        let avatar = avatarRes?.result?.avatar;
+
+        if (avatarRes?.result?.avatar?.includes('blank')) avatar = '';
+
         const insertedUser = await this.userService.save({
           name: data.result.NAME + ' ' + data.result.LAST_NAME,
           password: data.result.XML_ID,
           is_online: false,
           b24_id: data.result.ID,
-          b24_member_id: memberId 
+          b24_member_id: memberId,
+          avatar: avatar
         });
 
         const generatedId = insertedUser.identifiers[0].id;

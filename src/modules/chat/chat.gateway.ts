@@ -176,6 +176,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
     return 'success';
   }
 
+  //TODO REFACTORING;
   @UseGuards(WsGuard)
   @SubscribeMessage('status')
   async changeStatus(client: Socket, options: {status: string}) {
@@ -206,6 +207,40 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect, On
           this.logger.log(`Contact online notifications: ${contactId}`);
 
           this.server.to(contactId).emit('online', {
+            my_id: client.data.user.id
+          });
+        }
+      }
+    }
+    
+    if (options.status == 'away') {
+      this.usersService.changeStatus(client.data.user.id, 'away');
+      const contacts = await this.conversationService.getIndirectContactIds(client.data.user.id);
+
+      for (let contact of contacts) {
+        let contactId = this.connectedUsers.get(contact.toString());
+
+        if (contactId) {
+          this.logger.log(`Contact away notifications: ${contactId}`);
+
+          this.server.to(contactId).emit('away', {
+            my_id: client.data.user.id
+          });
+        }
+      }
+    }
+
+    if (options.status == 'busy') {
+      this.usersService.changeStatus(client.data.user.id, 'busy');
+      const contacts = await this.conversationService.getIndirectContactIds(client.data.user.id);
+
+      for (let contact of contacts) {
+        let contactId = this.connectedUsers.get(contact.toString());
+
+        if (contactId) {
+          this.logger.log(`Contact busy notifications: ${contactId}`);
+
+          this.server.to(contactId).emit('busy', {
             my_id: client.data.user.id
           });
         }

@@ -12,6 +12,13 @@ export class UserService {
     private usersRepository: Repository<User>) {}
 
 
+  async deleteOne(user_id: string | number) {
+    let user = await this.usersRepository.delete({
+      id: +user_id
+    });
+
+    return user;
+  }
   async save(userData: Partial<User>) {
     let user = await this.usersRepository.insert(userData);
 
@@ -60,22 +67,25 @@ export class UserService {
     await this.usersRepository.update({
       id: user_id 
     }, {
-      is_online: true
+      is_online: true,
+      status: 'online'
     })
   }
   async setOffline(user_id: number) {
     await this.usersRepository.update({
       id: user_id 
     }, {
-      is_online: false
+      is_online: false,
+      status: 'offline'
     })
   }
-  async changeStatus(user_id: number, status: 'online' | 'offline') {
+  async changeStatus(user_id: number, status: 'online' | 'offline' | 'away' | 'busy') {
     if (status == 'online') {
       await this.usersRepository.update({
         id: user_id 
       }, {
-        is_online: true 
+        is_online: true,
+        status: 'offline'
       });
     } 
 
@@ -83,7 +93,26 @@ export class UserService {
       await this.usersRepository.update({
         id: user_id 
       }, {
-        is_online: false
+        is_online: false,
+        status: 'offline'
+      });
+    }
+    
+    if (status == 'away') {
+      await this.usersRepository.update({
+        id: user_id 
+      }, {
+        is_online: true,
+        status: 'away'
+      });
+    }
+
+    if (status == 'busy') {
+      await this.usersRepository.update({
+        id: user_id 
+      }, {
+        is_online: true,
+        status: 'busy'
       });
     }
   }

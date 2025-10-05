@@ -22,5 +22,20 @@ export class User {
 
   @Column({ type: 'varchar', length: 30, nullable: true })
   b24_member_id?: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  about?: string;
+  
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  avatar?: string;
+
+  @Column({ type: 'varchar', length: 10, nullable: true, default: 'offline' })
+  status?: string;
+
+  @Column({
+    type: 'text',
+    array: true
+  })
+  blocked_ids: string[];
 }
 

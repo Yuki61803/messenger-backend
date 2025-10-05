@@ -67,6 +67,26 @@ export class ContactService {
     
     return 'Hello World!';
   }
+  async blockContact(user_id, contact_id) {
+    let user = await this.usersRepository.findOneBy({ 
+      id: user_id,
+    });
+
+    if (user && !user.blocked_ids?.includes(contact_id.toString())) {
+      if (user?.blocked_ids?.length > 0) {
+        user.blocked_ids = [...user.blocked_ids, contact_id.toString()];
+      } else {
+        user.blocked_ids = [contact_id.toString()];
+      }
+      this.usersRepository.save(user);
+    } else if (user) {
+      user.blocked_ids.splice(user.blocked_ids.findIndex(blocked_id => blocked_id == contact_id.toString()), 1);
+      this.usersRepository.save(user);
+    }
+
+    return 'success';
+  }
+
   
   async getContactIds(user_id: string, search_text?: string) {
     let contacts = await this.contactsRepository.findBy({
@@ -75,7 +95,10 @@ export class ContactService {
 
     let response: Array<Contact & {
       name: string,
-      is_online: boolean
+      is_online: boolean,
+      avatar: string,
+      about: string,
+      status: string 
     }> = [];
  
     for (let i = 0; i < contacts.length; i++) {
@@ -88,6 +111,9 @@ export class ContactService {
           ...contacts[i],
           name: user.name,
           is_online: user.is_online,
+          avatar: user.avatar || '',
+          about: user.about || '',
+          status: user.status ? user.status : 'offline'
         }
       }
     }

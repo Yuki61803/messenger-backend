@@ -20,7 +20,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login/b24')
   async signInViaB24(@Body() signInDto: Record<string, any>, @Response() res) {
-    const tokenObject = await this.authService.authViaB24(signInDto.token, signInDto.memberId);
+    const tokenObject = await this.authService.authViaB24(signInDto.token, signInDto.memberId, signInDto.domain);
 
     res.cookie('access_token', tokenObject.access_token);
 
@@ -30,10 +30,10 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login/test')
   async signInTest(@Body() signInDto: Record<string, any>, @Response() res) {
+    console.log('test')
     const tokenObject = await this.authService.authViaB24Test(signInDto);
 
     res.cookie('access_token', tokenObject.access_token);
-
     res.send(tokenObject);
   }
 

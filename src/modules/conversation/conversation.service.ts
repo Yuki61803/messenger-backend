@@ -119,6 +119,21 @@ export class ConversationService {
     return conversations;
   }
 
+  private async isBlocked(user_id: string, conversation: Conversation) {
+    let otherParticipants = conversation.participants.filter((participant_id) => participant_id.toString() != user_id.toString());
+
+    let user = await this.usersRepository.findOneBy({
+      id: +user_id
+    });
+    let participantUser = await this.usersRepository.findOneBy({
+      id: +otherParticipants[0]
+    });
+
+    if (participantUser && user?.blocked_ids?.includes(participantUser.id.toString())) return true;
+    if (participantUser?.blocked_ids?.includes(user_id.toString())) return true;
+    else return false;
+  }
+
   async sendMessage(author_id: string | number, message: SendMessage): Promise<SendedMessage | undefined> {
 
     let conversation: Conversation | null
@@ -127,6 +142,7 @@ export class ConversationService {
       let conversations = await this.conversationsRepository.findBy({ 
         participants: ArrayContains([message?.contact_id?.toString(), author_id.toString()])
       });
+
       if (conversations?.length > 0) {
         conversation = conversations[0];
       } else {
@@ -143,6 +159,8 @@ export class ConversationService {
         id: message.conversation_id as any // скорее всего, будет uuid, а не number
       });
     }
+
+    if (await this.isBlocked(author_id.toString(), conversation as Conversation)) return undefined;
 
     if (!conversation) {
       throw new NotFoundException('Conversation not found');
