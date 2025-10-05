@@ -5,7 +5,7 @@ export class Migrations1755769573994 {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
           `CREATE TABLE IF NOT EXISTS users (
-            id INT AUTO_INCREMENT PRIMARY KEY,
+            id SERIAL PRIMARY KEY, 
             name VARCHAR(255) NOT NULL,
             password VARCHAR(255) NOT NULL,
             is_online boolean NOT NULL,
@@ -16,7 +16,7 @@ export class Migrations1755769573994 {
             about VARCHAR(500) NULL,
             avatar VARCHAR(50) NULL,
             status VARCHAR(10) NULL,
-            blocked_ids TEXT[] NULL,
+            blocked_ids TEXT[] NULL
           );`,
         )
     }

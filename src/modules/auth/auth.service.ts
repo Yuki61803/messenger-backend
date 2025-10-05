@@ -34,7 +34,7 @@ export class AuthService {
     })
     const data = await res.json();
     if (data?.result?.ID) {
-      let user = await this.userService.findOneById(data.result.ID);
+      let user = await this.userService.findOneByB24(data.result.ID, memberId);
 
       if (!user) {
         // todo

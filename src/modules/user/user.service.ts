@@ -85,7 +85,7 @@ export class UserService {
         id: user_id 
       }, {
         is_online: true,
-        status: 'offline'
+        status: 'online'
       });
     } 
 
@@ -115,5 +115,11 @@ export class UserService {
         status: 'busy'
       });
     }
+  }
+  async findOneByB24(b24Id: string, memberId: string) {
+    return this.usersRepository.findOneBy({
+      b24_id: b24Id,
+      b24_member_id: memberId
+    });
   }
 }
