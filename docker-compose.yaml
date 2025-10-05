@@ -52,6 +52,8 @@ services:
           memory: 512M
     expose:
       - "3000"
+    ports:
+      - 6379:3000
     volumes:
       - messenger_files:/files
     env_file:
